@@ -1,0 +1,488 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+  .wa-shell {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 16px;
+    max-width: 420px;
+    margin: 1rem auto;
+  }
+  .wa-header {
+    background: #128C7E;
+    border-radius: 12px 12px 0 0;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+  }
+  .wa-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #25D366;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500; font-size: 14px; color: white;
+  }
+  .wa-header-info { flex: 1; }
+  .wa-header-name { font-size: 15px; font-weight: 500; }
+  .wa-header-status { font-size: 12px; opacity: 0.85; }
+  .wa-body {
+    background: #E5DDD5;
+    min-height: 400px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-radius: 0 0 12px 12px;
+    position: relative;
+  }
+  .wa-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    align-items: center;
+  }
+  .wa-input {
+    flex: 1;
+    border-radius: 20px;
+    border: none;
+    padding: 9px 14px;
+    font-size: 14px;
+    background: white;
+    outline: none;
+    color: #333;
+  }
+  .wa-send-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #128C7E;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .bubble {
+    max-width: 88%;
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 13.5px;
+    line-height: 1.45;
+    position: relative;
+    word-break: break-word;
+  }
+  .bubble.user {
+    background: #DCF8C6;
+    align-self: flex-end;
+    border-radius: 8px 0 8px 8px;
+    color: #111;
+  }
+  .bubble.bot {
+    background: white;
+    align-self: flex-start;
+    border-radius: 0 8px 8px 8px;
+    color: #111;
+  }
+  .bubble .time {
+    font-size: 10px;
+    color: #999;
+    text-align: right;
+    margin-top: 3px;
+  }
+  .menu-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    align-self: flex-start;
+    max-width: 92%;
+    border: 0.5px solid #ddd;
+  }
+  .menu-header {
+    background: #128C7E;
+    color: white;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .menu-day {
+    padding: 6px 12px;
+    border-bottom: 0.5px solid #f0f0f0;
+    font-size: 12.5px;
+    color: #111;
+  }
+  .menu-day:last-child { border-bottom: none; }
+  .menu-day-name { font-weight: 500; color: #128C7E; font-size: 11px; text-transform: uppercase; }
+  .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
+  .menu-item-name { color: #333; }
+  .menu-item-price { font-weight: 500; color: #128C7E; font-size: 12px; white-space: nowrap; }
+  .wa-poll {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    align-self: flex-start;
+    max-width: 92%;
+    border: 0.5px solid #ddd;
+  }
+  .poll-header { background: #128C7E; color: white; padding: 8px 12px; font-size: 13px; font-weight: 500; }
+  .poll-question { padding: 8px 12px 4px; font-size: 13px; color: #333; font-weight: 500; }
+  .poll-day-section { padding: 4px 12px; border-bottom: 0.5px solid #f5f5f5; }
+  .poll-day-section:last-child { border-bottom: none; }
+  .poll-day-label { font-size: 10.5px; color: #888; text-transform: uppercase; font-weight: 500; padding: 4px 0 2px; }
+  .poll-option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 0;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+  }
+  .poll-option input[type=radio] { accent-color: #128C7E; }
+  .poll-option.selected { font-weight: 500; color: #128C7E; }
+  .poll-submit {
+    width: calc(100% - 24px);
+    margin: 8px 12px;
+    padding: 8px;
+    background: #128C7E;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .pay-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    align-self: flex-start;
+    max-width: 92%;
+    border: 0.5px solid #ddd;
+  }
+  .pay-header { background: #128C7E; color: white; padding: 8px 12px; font-size: 13px; font-weight: 500; }
+  .pay-option {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 0.5px solid #f5f5f5;
+    font-size: 13px;
+    color: #333;
+  }
+  .pay-option:last-of-type { border-bottom: none; }
+  .pay-option input[type=radio] { accent-color: #128C7E; }
+  .clabe-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    align-self: flex-start;
+    max-width: 92%;
+    border: 0.5px solid #ddd;
+  }
+  .clabe-header { background: #0a7a6b; color: white; padding: 8px 12px; font-size: 13px; font-weight: 500; }
+  .clabe-body { padding: 10px 12px; font-size: 12.5px; color: #333; }
+  .clabe-row { display: flex; flex-direction: column; margin-bottom: 6px; }
+  .clabe-label { font-size: 10.5px; color: #888; text-transform: uppercase; }
+  .clabe-value { font-weight: 500; font-size: 13px; color: #111; font-family: monospace; letter-spacing: 0.5px; }
+  .qr-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    align-self: flex-start;
+    max-width: 92%;
+    border: 0.5px solid #ddd;
+    text-align: center;
+  }
+  .qr-header { background: #128C7E; color: white; padding: 8px 12px; font-size: 13px; font-weight: 500; text-align: left; }
+  .qr-body { padding: 12px; }
+  .qr-code { display: inline-block; }
+  .qr-num { font-size: 12px; color: #555; margin-top: 6px; }
+  .qr-inst { font-size: 11.5px; color: #888; margin-top: 4px; }
+  .step { display: none; flex-direction: column; gap: 8px; }
+  .step.active { display: flex; }
+  .day-tag { display: inline-block; background: #E5F6F1; color: #0a7a6b; border-radius: 4px; padding: 1px 5px; font-size: 11px; font-weight: 500; margin-right: 4px; }
+  .total-line { font-size: 12.5px; color: #333; padding: 6px 12px 8px; border-top: 0.5px solid #eee; }
+  .total-bold { font-weight: 500; color: #128C7E; }
+</style>
+
+<div class="wa-shell">
+  <div class="wa-header">
+    <div class="wa-avatar">BK</div>
+    <div class="wa-header-info">
+      <div class="wa-header-name">BeKook 🍽️</div>
+      <div class="wa-header-status">en línea</div>
+    </div>
+    <span style="font-size:18px; opacity:0.8;">📞 &nbsp; ⋮</span>
+  </div>
+
+  <div class="wa-body" id="chatBody">
+
+    <div class="step active" id="step0">
+      <div class="bubble bot">
+        Escribe <strong>Hola</strong> para comenzar tu pedido 👇
+        <div class="time">10:00</div>
+      </div>
+      <div class="wa-input-row">
+        <input class="wa-input" id="msgInput0" placeholder="Mensaje" value="Hola" />
+        <button class="wa-send-btn" onclick="sendHola()">➤</button>
+      </div>
+    </div>
+
+    <div class="step" id="step1">
+      <div class="bubble user">Hola <div class="time">10:01</div></div>
+      <div class="bubble bot">
+        ¡Hola! 👋 Bienvenid@ a <strong>BeKook</strong>, tu comida casera en Culiacán.<br><br>
+        Aquí tienes el <strong>menú de esta semana</strong> 🍲
+        <div class="time">10:01</div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-header">📋 Menú Semana — BeKook</div>
+        <div class="menu-day">
+          <div class="menu-day-name">Lunes</div>
+          <div class="menu-item"><span class="menu-item-name">🍗 Pollo en salsa verde con arroz</span><span class="menu-item-price">$75</span></div>
+          <div class="menu-item"><span class="menu-item-name">🫘 Lentejas con plátano y chile</span><span class="menu-item-price">$65</span></div>
+        </div>
+        <div class="menu-day">
+          <div class="menu-day-name">Martes</div>
+          <div class="menu-item"><span class="menu-item-name">🥩 Bistec encebollado con frijoles</span><span class="menu-item-price">$85</span></div>
+          <div class="menu-item"><span class="menu-item-name">🌽 Pozole rojo de pollo</span><span class="menu-item-price">$70</span></div>
+        </div>
+        <div class="menu-day">
+          <div class="menu-day-name">Miércoles</div>
+          <div class="menu-item"><span class="menu-item-name">🐟 Pescado zarandeado con ensalada</span><span class="menu-item-price">$90</span></div>
+          <div class="menu-item"><span class="menu-item-name">🍲 Caldo de res con verduras</span><span class="menu-item-price">$70</span></div>
+        </div>
+        <div class="menu-day">
+          <div class="menu-day-name">Jueves</div>
+          <div class="menu-item"><span class="menu-item-name">🫓 Enchiladas verdes con crema</span><span class="menu-item-price">$70</span></div>
+          <div class="menu-item"><span class="menu-item-name">🥕 Espinazo con verdolagas</span><span class="menu-item-price">$75</span></div>
+        </div>
+        <div class="menu-day">
+          <div class="menu-day-name">Viernes</div>
+          <div class="menu-item"><span class="menu-item-name">🌮 Tacos de tinga de pollo (3 pzas)</span><span class="menu-item-price">$80</span></div>
+          <div class="menu-item"><span class="menu-item-name">🍳 Chilaquiles verdes con frijoles</span><span class="menu-item-price">$65</span></div>
+        </div>
+        <div class="menu-day">
+          <div class="menu-day-name">Sábado</div>
+          <div class="menu-item"><span class="menu-item-name">🍖 Costillas en salsa BBQ casera</span><span class="menu-item-price">$95</span></div>
+          <div class="menu-item"><span class="menu-item-name">🌶️ Chile relleno con caldillo</span><span class="menu-item-price">$80</span></div>
+        </div>
+      </div>
+      <div class="bubble bot">
+        Escoge tu platillo para cada día en la encuesta 👇
+        <div class="time">10:01</div>
+      </div>
+      <div class="wa-poll" id="pollCard">
+        <div class="poll-header">📝 ¿Qué quieres comer esta semana?</div>
+        <div class="poll-question">Elige 1 platillo por día:</div>
+        <div id="pollDays"></div>
+        <button class="poll-submit" onclick="submitPoll()">Confirmar mis platillos ✓</button>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+    </div>
+
+    <div class="step" id="step3">
+    </div>
+
+    <div class="step" id="step4">
+    </div>
+
+    <div class="step" id="step5">
+    </div>
+
+  </div>
+</div>
+
+<script>
+const menu = [
+  { day: 'Lunes', opts: [{ name: 'Pollo en salsa verde con arroz', price: 75 }, { name: 'Lentejas con plátano y chile', price: 65 }] },
+  { day: 'Martes', opts: [{ name: 'Bistec encebollado con frijoles', price: 85 }, { name: 'Pozole rojo de pollo', price: 70 }] },
+  { day: 'Miércoles', opts: [{ name: 'Pescado zarandeado con ensalada', price: 90 }, { name: 'Caldo de res con verduras', price: 70 }] },
+  { day: 'Jueves', opts: [{ name: 'Enchiladas verdes con crema', price: 70 }, { name: 'Espinazo con verdolagas', price: 75 }] },
+  { day: 'Viernes', opts: [{ name: 'Tacos de tinga de pollo (3 pzas)', price: 80 }, { name: 'Chilaquiles verdes con frijoles', price: 65 }] },
+  { day: 'Sábado', opts: [{ name: 'Costillas en salsa BBQ casera', price: 95 }, { name: 'Chile relleno con caldillo', price: 80 }] },
+];
+let selections = {};
+let payMethod = '';
+
+function buildPoll() {
+  const container = document.getElementById('pollDays');
+  menu.forEach((d, di) => {
+    const sec = document.createElement('div');
+    sec.className = 'poll-day-section';
+    sec.innerHTML = `<div class="poll-day-label">${d.day}</div>` +
+      d.opts.map((o, oi) => `
+        <label class="poll-option" id="opt_${di}_${oi}">
+          <input type="radio" name="day${di}" value="${oi}" onchange="selectOpt(${di},${oi})">
+          ${o.name} — <span style="color:#128C7E;font-weight:500;">$${o.price}</span>
+        </label>`).join('');
+    container.appendChild(sec);
+  });
+}
+
+function selectOpt(di, oi) {
+  selections[di] = oi;
+  menu.forEach((_, i) => {
+    menu[i].opts.forEach((__, j) => {
+      const el = document.getElementById(`opt_${i}_${j}`);
+      if (el) el.classList.toggle('selected', i === di && j === oi);
+    });
+  });
+}
+
+function sendHola() {
+  document.getElementById('step0').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+  buildPoll();
+  scroll();
+}
+
+function submitPoll() {
+  const missing = menu.findIndex((_, i) => selections[i] === undefined);
+  if (missing !== -1) {
+    alert(`Falta elegir el platillo del ${menu[missing].day} 😊`);
+    return;
+  }
+  let total = 0;
+  let summary = menu.map((d, i) => {
+    const opt = d.opts[selections[i]];
+    total += opt.price;
+    return `<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:2px 0;"><span><span class="day-tag">${d.day}</span>${opt.name}</span><span style="color:#128C7E;font-weight:500;margin-left:8px;">$${opt.price}</span></div>`;
+  }).join('');
+
+  const step2 = document.getElementById('step2');
+  step2.innerHTML = `
+    <div class="bubble user">✅ Pedido confirmado<div class="time">10:05</div></div>
+    <div class="bubble bot">¡Perfecto! Aquí está tu resumen 🧾<div class="time">10:05</div></div>
+    <div class="clabe-card">
+      <div class="clabe-header">🧾 Tu pedido de la semana</div>
+      <div class="clabe-body">${summary}</div>
+      <div class="total-line">Total de la semana: <span class="total-bold">$${total} MXN</span></div>
+    </div>
+    <div class="bubble bot">¿Cómo prefieres pagar? 💳<div class="time">10:05</div></div>
+    <div class="pay-card">
+      <div class="pay-header">💰 Método de pago</div>
+      <label class="pay-option"><input type="radio" name="pay" value="efectivo" onchange="selectPay('efectivo')"> 💵 Efectivo al recoger</label>
+      <label class="pay-option"><input type="radio" name="pay" value="transferencia" onchange="selectPay('transferencia')"> 🏦 Transferencia SPEI</label>
+      <button class="poll-submit" onclick="submitPay()">Confirmar pago ✓</button>
+    </div>
+  `;
+  document.getElementById('step1').classList.remove('active');
+  step2.classList.add('active');
+  scroll();
+}
+
+function selectPay(v) { payMethod = v; }
+
+function submitPay() {
+  if (!payMethod) { alert('Elige un método de pago 😊'); return; }
+  const step3 = document.getElementById('step3');
+  const step2 = document.getElementById('step2');
+  if (payMethod === 'efectivo') {
+    step3.innerHTML = `
+      <div class="bubble user">💵 Pagaré en efectivo<div class="time">10:06</div></div>
+      <div class="bubble bot">¡Anotado! Pagarás al recoger tu comida 🙌<br>Aquí está tu código de confirmación para mostrar al recoger 👇<div class="time">10:06</div></div>
+    `;
+    step2.classList.remove('active');
+    step3.classList.add('active');
+    showQR(step3, 'EFECTIVO');
+  } else {
+    step3.innerHTML = `
+      <div class="bubble user">🏦 Pagaré por transferencia<div class="time">10:06</div></div>
+      <div class="bubble bot">¡Perfecto! Realiza tu transferencia a esta cuenta 👇<div class="time">10:06</div></div>
+      <div class="clabe-card">
+        <div class="clabe-header">🏦 Datos para transferencia SPEI</div>
+        <div class="clabe-body">
+          <div class="clabe-row"><span class="clabe-label">Banco</span><span class="clabe-value">BBVA México</span></div>
+          <div class="clabe-row"><span class="clabe-label">Titular</span><span class="clabe-value">BeKook Culiacán SA de CV</span></div>
+          <div class="clabe-row"><span class="clabe-label">CLABE</span><span class="clabe-value">012 910 0123456789 01</span></div>
+          <div class="clabe-row"><span class="clabe-label">Concepto</span><span class="clabe-value">Pedido semana BeKook</span></div>
+        </div>
+      </div>
+      <div class="bubble bot">Una vez que hagas la transferencia, envíanos el comprobante aquí. Te mandaremos tu código QR de recogida 📲<div class="time">10:07</div></div>
+      <div class="wa-input-row">
+        <input class="wa-input" id="compInput" placeholder="Escribe 'Transferencia enviada'" value="Transferencia enviada" />
+        <button class="wa-send-btn" onclick="confirmTransfer()">➤</button>
+      </div>
+    `;
+    step2.classList.remove('active');
+    step3.classList.add('active');
+    scroll();
+  }
+}
+
+function confirmTransfer() {
+  const step4 = document.getElementById('step4');
+  const step3 = document.getElementById('step3');
+  const input = document.getElementById('compInput');
+  const txt = input ? input.value || 'Transferencia enviada' : 'Transferencia enviada';
+  step4.innerHTML = `<div class="bubble user">${txt} ✅<div class="time">10:08</div></div>
+    <div class="bubble bot">¡Listo! Comprobante recibido 🎉 Aquí está tu código QR para recoger tu pedido 👇<div class="time">10:08</div></div>`;
+  step3.classList.remove('active');
+  step4.classList.add('active');
+  showQR(step4, 'SPEI');
+}
+
+function showQR(container, tipo) {
+  const folio = 'BK-' + Math.floor(Math.random() * 9000 + 1000);
+  const qrDiv = document.createElement('div');
+  qrDiv.className = 'qr-card';
+  qrDiv.innerHTML = `
+    <div class="qr-header">🎟️ Tu pase de recogida</div>
+    <div class="qr-body">
+      <div class="qr-code">
+        <canvas id="qrCanvas" width="150" height="150"></canvas>
+      </div>
+      <div class="qr-num" style="font-weight:500;font-size:13px;">Folio: ${folio}</div>
+      <div class="qr-num">Pago: ${tipo === 'SPEI' ? '🏦 Transferencia' : '💵 Efectivo'}</div>
+      <div class="qr-inst" style="margin-top:6px;background:#E5F6F1;border-radius:6px;padding:6px 10px;color:#0a7a6b;">
+        Muestra este QR al recoger tu pedido.<br>Válido de lunes a sábado.
+      </div>
+    </div>`;
+  container.appendChild(qrDiv);
+  scroll();
+  setTimeout(() => drawQR(folio), 100);
+}
+
+function drawQR(text) {
+  const canvas = document.getElementById('qrCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const size = 150;
+  const modules = 21;
+  const cell = Math.floor(size / modules);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, size, size);
+  const data = [];
+  for (let r = 0; r < modules; r++) {
+    data[r] = [];
+    for (let c = 0; c < modules; c++) {
+      let v = false;
+      if ((r < 7 && c < 7) || (r < 7 && c >= modules - 7) || (r >= modules - 7 && c < 7)) {
+        const lr = r < 7 ? r : r - (modules - 7);
+        const lc = c < 7 ? c : c - (modules - 7);
+        if (lr === 0 || lr === 6 || lc === 0 || lc === 6 || (lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4)) v = true;
+      } else {
+        const seed = (text.charCodeAt((r * modules + c) % text.length) + r * 3 + c * 7) % 3;
+        v = seed !== 0;
+      }
+      data[r][c] = v;
+    }
+  }
+  ctx.fillStyle = '#128C7E';
+  for (let r = 0; r < modules; r++) {
+    for (let c = 0; c < modules; c++) {
+      if (data[r][c]) ctx.fillRect(c * cell + 2, r * cell + 2, cell - 1, cell - 1);
+    }
+  }
+}
+
+function scroll() {
+  setTimeout(() => {
+    const b = document.getElementById('chatBody');
+    if (b) b.scrollTop = b.scrollHeight;
+  }, 80);
+}
+</script>
